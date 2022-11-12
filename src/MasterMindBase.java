@@ -22,7 +22,11 @@ public class MasterMindBase {
 	résultat : une copie de tab
     */
     public static int[] copieTab(int[] tab){
-	
+        int[] tabCop =  new int[tab.length];
+        for(int i = 0;  i < tab.length; i++){
+            tabCop[i] = tab[i];
+        }
+	    return tabCop;
     }
 
     //______________________________________________
