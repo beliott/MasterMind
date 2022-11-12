@@ -13,7 +13,11 @@ public class MasterMindBase {
 	résultat : un tableau de nb entiers égaux à val
     */
     public static int[] initTab(int nb, int val){
-
+        int[] tab = new int[nb];
+        for(int i = 0; i < nb; i++){
+            tab[i] = val;
+        }
+        return tab;
     }
 
     //______________________________________________
@@ -35,7 +39,15 @@ public class MasterMindBase {
 	résultat : la liste des éléments de t entre parenthèses et séparés par des virgules
     */
     public static String listElem(char[] t){
-  
+        String elts = "( ";
+        for(int i = 0; i < t.length; i++){
+            elts = elts + t[i];
+            if(i != t.length - 1){
+                elts = elts + ", ";
+            }
+        }
+        elts = elts + ")";
+        return elts;
     }
 
     //______________________________________________
@@ -44,6 +56,13 @@ public class MasterMindBase {
 	résultat : le plus grand indice d'une case de t contenant c s'il existe, -1 sinon
     */
     public static int plusGrandIndice(char[] t, char c){
+        int indice = -1;
+        for( int i = 0; i < t.length; i++){
+            if(t[i] == c){
+                indice = i;
+            }
+        }
+        return indice;
  
     }
     //______________________________________________
@@ -53,7 +72,7 @@ public class MasterMindBase {
 	stratégie : utilise la fonction plusGrandIndice
     */
     public static boolean estPresent(char[] t, char c){
- 
+        return plusGrandIndice(t, c) != -1;
     }
 
     //______________________________________________
@@ -64,7 +83,12 @@ public class MasterMindBase {
 	stratégie : utilise la fonction plusGrandIndice
     */
     public static boolean elemDiff(char[] t){
- 
+        for(int i = 0; i < t.length; i++){
+            if( i != plusGrandIndice(t, t[i])){
+                return false;
+            }
+        }
+        return true;
     }
     
     //______________________________________________
@@ -73,7 +97,12 @@ public class MasterMindBase {
 	résultat : vrai ssi t1 et t2 contiennent la même suite d'entiers
     */
     public static boolean sontEgaux(int[] t1, int[] t2){
- 
+        for( int i = 0; i < t1.length; i++){
+            if(t1[i] != t2[i]){
+                return false;
+            }
+        }
+        return true;
     }
 
     //______________________________________________
