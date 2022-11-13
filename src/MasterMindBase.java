@@ -116,7 +116,13 @@ public class MasterMindBase {
 	résultat : un tableau de lgCode entiers choisis aléatoirement entre 0 et nbCouleurs-1
     */
     public static int[] codeAleat(int lgCode, int nbCouleurs){
-	
+        int[] code = new int[lgCode];
+        for(int i = 0; i < lgCode; i++){
+            Random r = new Random();
+            int aleat = r.nextInt(nbCouleurs);
+            code[i] = aleat;
+        }
+	    return code;
     }      
 
     //____________________________________________________________
@@ -126,7 +132,23 @@ public class MasterMindBase {
 	résultat : vrai ssi codMot est correct, c'est-à-dire de longueur lgCode et ne contenant que des éléments de tabCouleurs
     */
     public static boolean codeCorrect(String codMot, int lgCode, char[] tabCouleurs){
-  
+        int parcoursTabC;
+        if( codMot.length() != lgCode){
+            System.out.println(" Le paramètre codMot n'est pas de longueur lgCode");
+            return false;
+        }
+        for(int i = 0; i < codMot.length(); i++){
+            char l = codMot.charAt(i);  // je recupere la i-ème lettre du code
+            for(int j = 0; j < tabCouleurs.length; j++){
+                if(tabCouleurs[j] == l){
+                    break;  // si lettre du code == element parcouru on peut passer
+                }
+                if(j == tabCouleurs.length - 1){ // si on a tt parcouru sans trouver de correspondances
+                    return false;  // alors lettre du code pas dans les lettres du tab.
+                }
+            }
+        }
+        return true;
     }
    
     //____________________________________________________________

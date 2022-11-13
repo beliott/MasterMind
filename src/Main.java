@@ -44,6 +44,10 @@ public class Main {
         System.out.println(MasterMindBase.sontEgaux(tab1, tab3));
         System.out.println(MasterMindBase.sontEgaux(tab3, tab3));
 
+        // test codeAleat
+        System.out.println(MasterMindBase.codeAleat(4, 6));
+        System.out.println(MasterMindBase.codeAleat(4, 6));
+        System.out.println(MasterMindBase.codeAleat(4, 6));
     }
 
 
