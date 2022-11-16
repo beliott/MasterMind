@@ -157,6 +157,15 @@ public class MasterMindBase {
 	résultat : le code codMot sous forme de tableau d'entiers en remplaçant chaque couleur par son indice dans tabCouleurs
     */
     public static int[] motVersEntiers(String codMot, char[] tabCouleurs){
+        int [] tabR = new int[codMot.length()];    // Tableau qui prend la longueur de codMot
+        for (int i = 0 ; i<tabR.length ; i++ ){
+            for(int j = 0; i<tabCouleurs.length ; j++){
+                if (tabCouleurs[j] == codMot.charAt(i)){
+                    tabR[i] = j;                         // on remplace par l'indice tabCouleurs de la couleur de codmot
+                }
+            }
+        }
+        return tabR;
  
     }
 
@@ -168,6 +177,8 @@ public class MasterMindBase {
 	résultat : le code saisi sous forme de tableau d'entiers
     */
     public static int[] propositionCodeHumain(int nbCoups, int lgCode, char[] tabCouleurs){
+        System.out.print("Veuillez ");
+
    
     }
 
