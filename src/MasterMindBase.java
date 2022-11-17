@@ -166,7 +166,6 @@ public class MasterMindBase {
             }
         }
         return tabR;
- 
     }
 
     //____________________________________________________________
@@ -177,8 +176,6 @@ public class MasterMindBase {
 	résultat : le code saisi sous forme de tableau d'entiers
     */
     public static int[] propositionCodeHumain(int nbCoups, int lgCode, char[] tabCouleurs){
-        System.out.print("Veuillez ");
-
    
     }
 
@@ -209,6 +206,19 @@ public class MasterMindBase {
 	Par exemple, si cod1 = (1,0,2,0) et cod2 = (0,1,0,0) la fonction retourne 3 (2 "0" et 1 "1")
     */
     public static int nbCommuns(int[] cod1,int[] cod2, int nbCouleurs){
+        boolean enCommun = false;
+        int cptCommuns = 0;
+        for (int i = 0; i < cod1.length; i++){
+            for( int j = 0; j < cod2.length; j++){
+                if (cod1[i] == cod2[j]){
+                    enCommun = true;
+                }
+            }
+            if( enCommun == true){
+                cptCommuns++;
+            }
+        }
+        return cptCommuns;
 
     }
 
@@ -221,6 +231,7 @@ public class MasterMindBase {
 	et 2 mal placés (1 "0" et 1 "1")
     */
     public static int[] nbBienMalPlaces(int[] cod1,int[] cod2, int nbCouleurs){
+        // faire  k += 1 quand indice j = i et return ( k, nbCommuns-k)
 
     }
 
