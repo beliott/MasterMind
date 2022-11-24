@@ -158,7 +158,7 @@ public class MasterMindBase {
     public static int[] motVersEntiers(String codMot, char[] tabCouleurs){
         int [] tabR = new int[codMot.length()];    // Tableau qui prend la longueur de codMot
         for (int i = 0 ; i<tabR.length ; i++ ){
-            for(int j = 0; i<tabCouleurs.length ; j++){
+            for(int j = 0; j<tabCouleurs.length ; j++){
                 if (tabCouleurs[j] == codMot.charAt(i)){
                     tabR[i] = j;                         // on remplace par l'indice tabCouleurs de la couleur de codmot
                 }
@@ -175,7 +175,13 @@ public class MasterMindBase {
 	résultat : le code saisi sous forme de tableau d'entiers
     */
     public static int[] propositionCodeHumain(int nbCoups, int lgCode, char[] tabCouleurs){
-   
+        String codeEssai;
+        do {
+            System.out.println("Veuillez saisir votre tentative numéro" + nbCoups + 1 + " :");
+            codeEssai = Ut.saisirChaine();
+        }while( !codeCorrect(codeEssai, lgCode, tabCouleurs));
+
+        return motVersEntiers(codeEssai, tabCouleurs);
     }
 
     //____________________________________________________________
@@ -190,9 +196,9 @@ public class MasterMindBase {
             if (cod1[i] == cod2[i]) {
                 compteur++;
             }
-            return compteur;
-        }
 
+        }
+        return compteur;
     }
 
     //____________________________________________________________
@@ -213,30 +219,32 @@ public class MasterMindBase {
             }
             tabR[i] = compteur;
         }
-
+        return tabR;
     }
 
     //____________________________________________________________
     
     /** pré-requis : les éléments de cod1 et cod2 sont des entiers de 0 à nbCouleurs-1
 	résultat : le nombre d'éléments communs de cod1 et cod2, indépendamment de leur position
-	Par exemple, si cod1 = (1,0,2,0) et cod2 = (0,1,0,0) la fonction retourne 3 (2 "0" et 1 "1")
+	Par exemple, si cod1 = (1,0,2,0) et cod2 = (0,1,0,0) la fonction retourne 3 (2 "0" et 1 "1")nbCommuns + idee celui d'apres
     */
     public static int nbCommuns(int[] cod1,int[] cod2, int nbCouleurs){
-        boolean enCommun = false;
         int cptCommuns = 0;
-        for (int i = 0; i < cod1.length; i++){
-            for( int j = 0; j < cod2.length; j++){
-                if (cod1[i] == cod2[j]){
-                    enCommun = true;
-                }
+        int[] freqCod1 = tabFrequence(cod1, nbCouleurs);
+        int[] freqCod2 = tabFrequence(cod2, nbCouleurs);
+        for(int i = 0; i < freqCod1.length ; i++){
+            if(freqCod1[i] == freqCod2[i]){
+               cptCommuns += freqCod1[i];
             }
-            if( enCommun == true){
-                cptCommuns++;
+            else if (freqCod1[i] < freqCod2[i]){
+                cptCommuns += freqCod1[i];
+            }
+            else if (freqCod1[i] > freqCod2[i]) {
+                cptCommuns += freqCod2[i];
             }
         }
-        return cptCommuns;
 
+        return cptCommuns;
     }
 
     //____________________________________________________________
@@ -249,7 +257,8 @@ public class MasterMindBase {
     */
     public static int[] nbBienMalPlaces(int[] cod1,int[] cod2, int nbCouleurs){
         // faire  k += 1 quand indice j = i et return ( k, nbCommuns-k)
-
+        int[] nbBMP = {nbBienPlaces(cod1,cod2), nbCommuns(cod1, cod2,nbCouleurs) - nbBienPlaces(cod1, cod2)};
+        return nbBMP;
     }
 
 
@@ -268,7 +277,7 @@ public class MasterMindBase {
             - sinon le nombre de codes proposés par le joueur humain          
     */
     public static int mancheHumain(int lgCode, char[] tabCouleurs, int numManche, int nbEssaisMax){
-  
+
     }
 
     //____________________________________________________________
