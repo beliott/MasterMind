@@ -186,6 +186,13 @@ public class MasterMindBase {
 	Par exemple, si cod1 = (1,0,2,0) et cod2 = (0,1,0,0) la fonction retourne 1 (le "0" à l'indice 3)
     */
     public static int nbBienPlaces(int[] cod1,int[] cod2){
+        int compteur = 0;
+        for (int i = 0; i < cod1.length; i++) {
+            if (cod1[i] == cod2[i]) {
+                compteur++;
+            }
+            return compteur;
+        }
 
     }
 
@@ -196,6 +203,17 @@ public class MasterMindBase {
 	Par exemple, si cod = (1,0,2,0) et nbCouleurs = 6 la fonction retourne (2,1,1,0,0,0)
     */
     public static int[] tabFrequence(int[] cod, int nbCouleurs){
+        int compteur = 0;     // Permet de compter le nombre d'elements communs
+        int[] tabR = new int [nbCouleurs];
+        for (int i = 0 ; i<cod.length ; i ++){
+            compteur=0;
+            for(int j = 0; j<cod.length ; j++){
+                if( i == cod[j]) {
+                    compteur++;
+                }
+            }
+            tabR[i] = compteur;
+        }
   
     }
 
@@ -274,6 +292,14 @@ public class MasterMindBase {
 	résultat : vrai ssi rep est correct, c'est-à-dire rep[0] et rep[1] sont >= 0 et leur somme est <= lgCode
     */
     public static boolean repCorrecte(int[] rep, int lgCode){
+        int compteur=0;
+        boolean correcte = false;
+        for(int i = 0; i<rep.length ; i++) {
+            compteur++;
+        }
+        if(compteur <= lgCode) {
+            return correcte;
+        }
 
     }
 
