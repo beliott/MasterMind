@@ -291,9 +291,12 @@ public class MasterMindBase {
             }
             // placement c'est un tableau avec i[0] pions biens placés / i[1] pions mal placés
             int [] placement = nbBienMalPlaces(machineCodeur,humainProposition,tabCouleurs.length);
-            System.out.print("Vous avez " + placement[0] + "pions bien placés");
+            System.out.println("Vous avez " + placement[0] + "pions bien placés");
             System.out.print("Vous avez " + placement[1] + "pions mal placés" );
-            looser = placement[1] + 2 * (lgCode - (placement[0] + placement[1])); // Score total malus
+            if(numManche == nbEssaisMax) {
+                looser = placement[1] + 2 * (lgCode - (placement[0] + placement[1])); // Score total malus
+            }
+            numManche++;
         }
         return looser;
     }
@@ -327,11 +330,11 @@ public class MasterMindBase {
             return true;
         }
         else if(rep[0]<0 || rep[1]<0){
-            System.out.print("Le nombre de pions mal ou bien placés ne peut pas être négatif");
+            System.out.println("Le nombre de pions mal ou bien placés ne peut pas être négatif");
             return false;
         }
         else if(rep[0] + rep[1] > lgCode){
-            System.out.print("Le nombre total de pion ne peut pas être supérieur a la taille du code");
+            System.out.println("Le nombre total de pion ne peut pas être supérieur a la taille du code");
             return false;
         }
         return true;
@@ -364,8 +367,16 @@ public class MasterMindBase {
     des codes à valeurs  de 0 à nbCouleurs-1) et retourne vrai si ce code existe,
      sinon met dans cod1 le code ne contenant que des "0" et retourne faux
     */
-    public static boolean passeCodeSuivantLexico(int[] cod1, int  nbCouleurs){
+    public static boolean passeCodeSuivantLexico(int[] cod1, int  nbCouleurs) {
+        for (int i = 0; i < cod1.length; i++){
+            cod1[i]++;
+            if (cod1[i] + 1 == nbCouleurs) {
+                cod1 = initTab(cod1.length,0);
+                return false;
+            }
 
+        }
+        return true;
     }
 
     //___________________________________________________________________
@@ -379,7 +390,7 @@ public class MasterMindBase {
             propositions de cod seraient les nbCoups premières réponses de rep resp.
    */
    public static boolean estCompat(int [] cod1, int [][] cod,int [][] rep, int nbCoups, int  nbCouleurs){
- 
+
     }
 
     //___________________________________________________________________
