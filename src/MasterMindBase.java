@@ -277,7 +277,25 @@ public class MasterMindBase {
             - sinon le nombre de codes proposés par le joueur humain          
     */
     public static int mancheHumain(int lgCode, char[] tabCouleurs, int numManche, int nbEssaisMax){
-
+        int looser = 0;                                                    // Score final si le joueur ne gagne pas
+        int[] machineCodeur = codeAleat(lgCode,tabCouleurs.length);
+        while(numManche <= nbEssaisMax) {
+            System.out.println("Vous êtes à la manche numéro" + numManche);
+            if (numManche == nbEssaisMax -1) {
+                System.out.println("Attention ! Il ne vous reste plus qu'une seule manche !");
+            }
+            int[] humainProposition = propositionCodeHumain(numManche, lgCode, tabCouleurs); //le joueur propose un code
+            if (sontEgaux(humainProposition, machineCodeur) == true) {                  //le joueur gagne ?
+                System.out.println("Bien joué ! Vous avez gagnés en " + numManche);
+                return numManche;
+            }
+            // placement c'est un tableau avec i[0] pions biens placés / i[1] pions mal placés
+            int [] placement = nbBienMalPlaces(machineCodeur,humainProposition,tabCouleurs.length);
+            System.out.print("Vous avez " + placement[0] + "pions bien placés");
+            System.out.print("Vous avez " + placement[1] + "pions mal placés" );
+            looser = placement[1] + 2 * (lgCode - (placement[0] + placement[1])); // Score total malus
+        }
+        return looser;
     }
 
     //____________________________________________________________
@@ -290,7 +308,11 @@ public class MasterMindBase {
 	résultat : le code cod sous forme de mot d'après le tableau tabCouleurs
     */
     public static String entiersVersMot(int[] cod, char[] tabCouleurs){
- 
+        String codMot = "";
+        for (int i = 0 ; i<cod.length;i++){
+            codMot+=tabCouleurs[cod[i]];
+        }
+        return codMot;
     }
 
     //___________________________________________________________________
@@ -301,15 +323,18 @@ public class MasterMindBase {
 	résultat : vrai ssi rep est correct, c'est-à-dire rep[0] et rep[1] sont >= 0 et leur somme est <= lgCode
     */
     public static boolean repCorrecte(int[] rep, int lgCode){
-        int compteur=0;
-        boolean correcte = false;
-        for(int i = 0; i<rep.length ; i++) {
-            compteur++;
+        if(rep[0] >= 0 && rep[1] >= 0 && rep[0] + rep[1] <= lgCode){
+            return true;
         }
-        if(compteur <= lgCode) {
-            return correcte;
+        else if(rep[0]<0 || rep[1]<0){
+            System.out.print("Le nombre de pions mal ou bien placés ne peut pas être négatif");
+            return false;
         }
-
+        else if(rep[0] + rep[1] > lgCode){
+            System.out.print("Le nombre total de pion ne peut pas être supérieur a la taille du code");
+            return false;
+        }
+        return true;
     }
 
     //___________________________________________________________________
@@ -320,7 +345,14 @@ public class MasterMindBase {
 	résultat : les réponses du joueur humain dans un tableau à 2 entiers
     */
     public static int[] reponseHumain(int lgCode){
- 
+        int repHumain[] = new int[2];
+        String phrase [] = {"Veuillez saisir le nombre de pions bien placés","Veuillez saisir le nombre de pions mal placés"};
+        for(int i = 0 ; i<3;i++){
+            System.out.println(phrase[i]);
+            repHumain [i] = Ut.saisirEntier();
+            repCorrecte(repHumain,lgCode);
+        }
+        return repHumain;
     }
 
     //___________________________________________________________________
@@ -396,8 +428,13 @@ public class MasterMindBase {
 	résultat : l'entier strictement positif saisi
     */
     public static int saisirEntierPositif(){
-	
- 
+        int rep;
+        do{
+            System.out.print("Veuillez saisir un entier positif");
+            rep = Ut.saisirEntier();
+
+        }while (rep < 0);
+        return rep;
     }
 
     //___________________________________________________________________
@@ -408,7 +445,13 @@ public class MasterMindBase {
 	résultat : l'entier pair strictement positif saisi
     */
     public static int saisirEntierPairPositif(){
-	
+        int rep;
+        do{
+            System.out.print("Veuillez saisir un entier pair positif");
+            rep = Ut.saisirEntier();
+
+        }while (rep < 0 && rep % 2 == 0);
+        return rep;
     }
 
     //___________________________________________________________________
@@ -420,7 +463,14 @@ public class MasterMindBase {
 	résultat : le tableau des initiales des noms de couleurs saisis
     */
     public static char[] saisirCouleurs(){
-  
+        System.out.print("Veuillez saisir le nombre de couleurs que vous voulez utilisez");
+        int nbCouleurs = saisirEntierPositif();
+        char[] tabCouleurs = new char [nbCouleurs];
+        for(int i = 0; i<tabCouleurs.length ; i++){
+            System.out.print("Veuillez saisir l'iniatiale de la couleur");
+            tabCouleurs[i] = Ut.saisirCaractere();
+        }
+        return tabCouleurs;
     }
 
     //___________________________________________________________________
