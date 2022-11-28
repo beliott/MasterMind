@@ -42,7 +42,7 @@ public class MasterMindBase {
         String elts = "( ";
         for(int i = 0; i < t.length; i++){
             elts = elts + t[i];
-            if(i != t.length - 1){
+            if(i != t.length - 1){ // si on est pas sur denier element, on ajoute une virgule pr celui d'apres
                 elts = elts + ", ";
             }
         }
@@ -74,6 +74,7 @@ public class MasterMindBase {
     public static boolean estPresent(char[] t, char c){
         return plusGrandIndice(t, c) != -1;
     }
+        // regarder si la réponse est différente de -1  = regarder si le parcours du tableau a trouvé une correspondance
 
     //______________________________________________
     
@@ -84,7 +85,8 @@ public class MasterMindBase {
     */
     public static boolean elemDiff(char[] t){
         for(int i = 0; i < t.length; i++){
-            if( i != plusGrandIndice(t, t[i])){
+            if( i != plusGrandIndice(t, t[i])){ // si t[i] n'est pas le plusGrandIndice -> alors il a un doublon
+                System.out.println(t[i] + " indices : " + i + " et " + plusGrandIndice(t, t[i]));
                 return false;
             }
         }
@@ -97,8 +99,8 @@ public class MasterMindBase {
 	résultat : vrai ssi t1 et t2 contiennent la même suite d'entiers
     */
     public static boolean sontEgaux(int[] t1, int[] t2){
-        for( int i = 0; i < t1.length; i++){
-            if(t1[i] != t2[i]){
+        for( int i = 0; i < t1.length; i++){ // comparer petit a petit avec le meme compteur (ici i ) = regarder si tout le contenu est le meme.
+            if(t1[i] != t2[i]){ // Ca fonctionne dans le cas ou le pre-requis est respecté
                 return false;
             }
         }
@@ -116,11 +118,10 @@ public class MasterMindBase {
 	résultat : un tableau de lgCode entiers choisis aléatoirement entre 0 et nbCouleurs-1
     */
     public static int[] codeAleat(int lgCode, int nbCouleurs){
-        int[] code = new int[lgCode];
+        int[] code = new int[lgCode]; // on crée tableau de longueur du code
         for(int i = 0; i < lgCode; i++){
-            Random r = new Random();
-            int aleat = r.nextInt(nbCouleurs);
-            code[i] = aleat;
+            int aleat = Ut.randomMinMax(0, nbCouleurs - 1); // on prend un nb aléatoire dans les bornes
+            code[i] = aleat; // on l'ajoute dans la case parcourue
         }
 	    return code;
     }      
@@ -133,7 +134,7 @@ public class MasterMindBase {
     */
     public static boolean codeCorrect(String codMot, int lgCode, char[] tabCouleurs){
         if( codMot.length() != lgCode){
-            System.out.println(" Le paramètre codMot n'est pas de longueur lgCode");
+            System.out.println(" Le paramètre codMot n'est pas de longueur lgCode.");
             return false;
         }
         for(int i = 0; i < codMot.length(); i++){
@@ -143,6 +144,7 @@ public class MasterMindBase {
                     break;  // si lettre du code == element parcouru on peut passer
                 }
                 if(j == tabCouleurs.length - 1){ // si on a tt parcouru sans trouver de correspondances
+                    System.out.println(l + " n'est pas un élément de tabCouleurs.");
                     return false;  // alors lettre du code pas dans les lettres du tab.
                 }
             }
@@ -156,10 +158,10 @@ public class MasterMindBase {
 	résultat : le code codMot sous forme de tableau d'entiers en remplaçant chaque couleur par son indice dans tabCouleurs
     */
     public static int[] motVersEntiers(String codMot, char[] tabCouleurs){
-        int [] tabR = new int[codMot.length()];    // Tableau qui prend la longueur de codMot
+        int [] tabR = new int[codMot.length()];    // nouveau tableau qui prend la longueur de codMot
         for (int i = 0 ; i<tabR.length ; i++ ){
             for(int j = 0; j<tabCouleurs.length ; j++){
-                if (tabCouleurs[j] == codMot.charAt(i)){
+                if (tabCouleurs[j] == codMot.charAt(i)){ // on récupère le i-ème caractère du codMot
                     tabR[i] = j;                         // on remplace par l'indice tabCouleurs de la couleur de codmot
                 }
             }
@@ -178,10 +180,10 @@ public class MasterMindBase {
         String codeEssai;
         do {
             System.out.println("Veuillez saisir votre tentative numéro" + nbCoups + 1 + " :");
-            codeEssai = Ut.saisirChaine();
-        }while( !codeCorrect(codeEssai, lgCode, tabCouleurs));
+            codeEssai = Ut.saisirChaine(); // on demande à l'utilisateur de saisir un code ( chaine de caractères)
+        }while( !codeCorrect(codeEssai, lgCode, tabCouleurs)); // il recommence jusqu'à ce que le format respecte les règles de codeCorrect
 
-        return motVersEntiers(codeEssai, tabCouleurs);
+        return motVersEntiers(codeEssai, tabCouleurs); // transforme le code dans le type de retour attendu
     }
 
     //____________________________________________________________
@@ -193,7 +195,7 @@ public class MasterMindBase {
     public static int nbBienPlaces(int[] cod1,int[] cod2){
         int compteur = 0;
         for (int i = 0; i < cod1.length; i++) {
-            if (cod1[i] == cod2[i]) {
+            if (cod1[i] == cod2[i]) { // si les éléments du meme indice sont les memes alors ils sont bien placés
                 compteur++;
             }
 
@@ -313,7 +315,7 @@ public class MasterMindBase {
     public static String entiersVersMot(int[] cod, char[] tabCouleurs){
         String codMot = "";
         for (int i = 0 ; i<cod.length;i++){
-            codMot+=tabCouleurs[cod[i]];
+            codMot+=tabCouleurs[cod[i]]; // on ajoute chaque lettre dont l'indice est la valeur du tableau à l'indice i
         }
         return codMot;
     }
@@ -368,16 +370,26 @@ public class MasterMindBase {
      sinon met dans cod1 le code ne contenant que des "0" et retourne faux
     */
     public static boolean passeCodeSuivantLexico(int[] cod1, int  nbCouleurs) {
-        for (int i = 0; i < cod1.length; i++){
-            cod1[i]++;
-            if (cod1[i] + 1 == nbCouleurs) {
-                cod1 = initTab(cod1.length,0);
+        // on regarde si le code est au max
+        int cptDoublonsMax = 0;
+        while((cod1[cptDoublonsMax] == nbCouleurs - 1)) {
+            cptDoublonsMax += 1; // on compte occurences du nb max acceptable
+            if (cptDoublonsMax == cod1.length) { // si il est dans ttes les cases du tableau
+                cod1 = initTab(cod1.length, 0);
                 return false;
             }
-
+        }
+        // sinon dans le cas normal
+        int i = cod1.length - 1; // on part du dernier nb pour aller au suivant
+        cod1[i] += 1;
+        while(cod1[i] == nbCouleurs){ // on regarde si l'incrémentation dépasse le nb de couleurs dispos
+           cod1[i] = 0;
+           i--; // on baisse i pour voir si on retombe pas sur meme cas avec celui qu'on modifie
+           cod1[i] += 1; // on incrémente la valeur au dessus ( comme quand on passe de 9 à 10 )
         }
         return true;
-    }
+        }
+
 
     //___________________________________________________________________
 
