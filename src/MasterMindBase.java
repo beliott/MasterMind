@@ -370,21 +370,14 @@ public class MasterMindBase {
      sinon met dans cod1 le code ne contenant que des "0" et retourne faux
     */
     public static boolean passeCodeSuivantLexico(int[] cod1, int  nbCouleurs) {
-        // on regarde si le code est au max
-        int cptDoublonsMax = 0;
-        while((cod1[cptDoublonsMax] == nbCouleurs - 1)) {
-            cptDoublonsMax += 1; // on compte occurences du nb max acceptable
-            if (cptDoublonsMax == cod1.length) { // si il est dans ttes les cases du tableau
-                cod1 = initTab(cod1.length, 0);
-                return false;
-            }
-        }
-        // sinon dans le cas normal
         int i = cod1.length - 1; // on part du dernier nb pour aller au suivant
         cod1[i] += 1;
         while(cod1[i] == nbCouleurs){ // on regarde si l'incrémentation dépasse le nb de couleurs dispos
            cod1[i] = 0;
            i--; // on baisse i pour voir si on retombe pas sur meme cas avec celui qu'on modifie
+           if(i == -1){
+               return false; // on a regressé en remplacant ttes les valeurs par 0 donc on était au max
+           }
            cod1[i] += 1; // on incrémente la valeur au dessus ( comme quand on passe de 9 à 10 )
         }
         return true;
@@ -402,8 +395,15 @@ public class MasterMindBase {
             propositions de cod seraient les nbCoups premières réponses de rep resp.
    */
    public static boolean estCompat(int [] cod1, int [][] cod,int [][] rep, int nbCoups, int  nbCouleurs){
-
-    }
+       int[] nbBMP;
+       for(int i = 0; i < nbCoups; i++){
+           nbBMP = nbBienMalPlaces(cod1, cod[i], nbCouleurs);
+           if(nbBMP[0] != rep[i][0] || nbBMP[1] == rep[i][1] ){
+               return false;
+           }
+       }
+       return true;
+   }
 
     //___________________________________________________________________
 
