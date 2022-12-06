@@ -1,3 +1,4 @@
+import java.awt.*;
 import java.util.*;
 import java.lang.*;
 
@@ -418,7 +419,13 @@ public class MasterMindBase {
       sinon met dans cod1 le code ne contenant que des "0" et retourne faux
    */
    public static boolean passeCodeSuivantLexicoCompat(int [] cod1, int [][] cod,int [][] rep, int nbCoups, int  nbCouleurs){
-  
+       do{
+           passeCodeSuivantLexico(cod1, nbCouleurs); // on incrémente le code
+           if( sontEgaux(cod1, initTab(cod1.length, 0))){ // si  code == que des 0
+               return false;
+           }
+       }while (!estCompat(cod1, cod, rep, nbCoups, nbCouleurs)); // tant que le code est pas compatible
+       return true; // alors , il est compat donc true
     }
 
     //___________________________________________________________________
