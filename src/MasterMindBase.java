@@ -460,7 +460,6 @@ public class MasterMindBase {
         int[] ordiPropal = initTab(lgCode, 0);
         int[][] codes = new int[nbEssaisMax][ordiPropal.length];
         int[][] rep = new int[nbEssaisMax][2];
-        int looser = 0;                         // score final si le joueur ne gagne pas
         int nbEssais = 1;
         int[] humainBMP = initTab(2, 0);
 
@@ -468,7 +467,9 @@ public class MasterMindBase {
             System.out.println("Il vous reste " + nbEssais + "coups à jouer");
             if (nbEssais == 1) {
                 codes[nbEssais - 1] = copieTab(ordiPropal);
-            } else { /* check si le joueur triche */
+            }
+            /* check si le joueur triche */
+            else {
                 if (passeCodeSuivantLexicoCompat(ordiPropal, codes, rep, nbEssais, tabCouleurs.length)) {
                     passeCodeSuivantLexicoCompat(ordiPropal, codes, rep, nbEssais, tabCouleurs.length);
                     codes[nbEssais - 1] = copieTab(ordiPropal);
@@ -492,11 +493,11 @@ public class MasterMindBase {
                 System.out.println("Bien joué à l'ordinateur, il a remporté la partie!");
                 return nbEssais;
             }
+            nbEssais++;
         }
         /* Looser = score malus */
         int[] placement = copieTab(humainBMP);
-        looser = placement[1] + 2 * (lgCode - (placement[0] + placement[1]));
-        return looser;
+        return placement[1] + 2 * (lgCode - (placement[0] + placement[1]));
     }
 
     //___________________________________________________________________
@@ -517,7 +518,7 @@ public class MasterMindBase {
             System.out.print("Veuillez saisir un entier positif");
             rep = Ut.saisirEntier();
 
-        }while (rep <= 0);
+        } while (rep <= 0);
         return rep;
     }
 
@@ -534,7 +535,7 @@ public class MasterMindBase {
             System.out.print("Veuillez saisir un entier pair positif");
             rep = Ut.saisirEntier();
 
-        }while (rep < 0 && rep % 2 == 0);
+        }while (rep <= 0 || rep % 2 == 1);
         return rep;
     }
 
@@ -547,18 +548,21 @@ public class MasterMindBase {
 	résultat : le tableau des initiales des noms de couleurs saisis
     */
     public static char[] saisirCouleurs(){
-        System.out.print("Veuillez saisir le nombre de couleurs que vous voulez utilisez");
+        /* Variables */
         int nbCouleurs = saisirEntierPositif();
         char[] tabCouleurs = new char [nbCouleurs];
+        String coul;
 
+        System.out.print("Veuillez saisir le nombre de couleurs que vous voulez utilisez");
         for(int i = 0; i<tabCouleurs.length ; i++){
-            System.out.print("Veuillez saisir l'iniatiale de la couleur");
+            System.out.print("Veuillez saisir une couleur");
             do {
-                tabCouleurs[i] = Ut.saisirCaractere();
-                if (estPresent(tabCouleurs,tabCouleurs[i])){
-                    System.out.println("Veuillez saisir un initiale différent des autres");
+                coul = Ut.saisirChaine();
+                if (estPresent(tabCouleurs,coul.charAt(0))){
+                    System.out.println("Faites attention, vous avez deja utilisé cette initiale de couleurs ");
                 }
             } while (estPresent(tabCouleurs,tabCouleurs[i]));
+            tabCouleurs[i] = coul.charAt(0);
         }
         return tabCouleurs;
     }
@@ -581,37 +585,51 @@ public class MasterMindBase {
 	   Toute donnée incorrecte doit être re-saisie jusqu'à ce qu'elle soit correcte.
     */
     public static void main (String[] args){
-
-        /* Paramètres de la partie */
+        /* Variable des paramètres de la partie */
         int lgcode;
         char[] tabCouleurs;
         int nbManches;
         int nbEssaisMax;
 
-        /*   */
-        int numMancheActuel;
-        /*  */
+        /* Score */
+        int scoreJoueur=0;
+        int scoreOrdi=0;
 
-        /*Affichage lancement */
+        /* Affichage lancement */
         System.out.println("Bienvenu dans le jeu du Mastermind");
         System.out.println("Voici un petit rappel des règles");
-        System.out.println("Le Mastermind ou Master Mind est un jeu de société pour deux joueurs dont le but est de trouver un code");
+        System.out.println("Le Mastermind est un jeu de société pour deux joueurs dont le but est de trouver un code");
         System.out.println("Dans ce jeu vous pouvez incarner deux rôles : ");
         System.out.println("Le codeur, vous allez choisir un code secret que l'ordinateur devra deviner" );
         System.out.println("Le décodeur, vous allez devoir trouver le code que l'ordinateur a choisi");
+
+        /*Affichage definition des paramètres par le joueur */
         System.out.println("Vous devez choisir les paramètres de la partie");
         System.out.println("Veuillez saisir la longueur du code désiré");
         lgcode = saisirEntierPositif();
-        saisirCouleurs();
+        tabCouleurs = saisirCouleurs();
         System.out.println("Veuillez saisir un nombre de manches)");
         nbManches = saisirEntierPairPositif();
         System.out.println("Veuillez saisir le nombre de tours par manche");
         nbEssaisMax = saisirEntierPositif();
 
 
+        /*Lancement de la partie*/
+        for (int numManche = 1; numManche < nbManches; numManche+=2){
+            scoreJoueur += mancheHumain(lgcode,tabCouleurs,numManche,nbEssaisMax);
+            scoreOrdi += mancheOrdinateur(lgcode,tabCouleurs,numManche+1,nbEssaisMax);
+        }
 
-	
-   
+        /* Calcul de qui à gagné */
+        if(scoreOrdi < scoreJoueur){
+            System.out.println("L'ordinateur a gagné la partie");
+        }
+        else if (scoreJoueur == scoreOrdi){
+            System.out.println("Match nul");
+        }
+        else{
+            System.out.println("Vous avez gagnés la partie");
+        }
     } // fin main
 
     //___________________________________________________________________
