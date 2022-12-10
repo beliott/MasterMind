@@ -437,13 +437,8 @@ public class MasterMindBase {
    public static boolean passeCodeSuivantLexicoCompat(int [] cod1, int [][] cod,int [][] rep, int nbCoups, int  nbCouleurs){
        do{
            if(!passeCodeSuivantLexico(cod1, nbCouleurs)){ // si impossible et qu'on dépasse
-               passeCodeSuivantLexico(cod1, nbCouleurs); // cod1 devient tableau plein de 0
                return false;
            }
-           else{
-               passeCodeSuivantLexico(cod1, nbCouleurs); // on incrémente le code
-           }
-
        }while (!estCompat(cod1, cod, rep, nbCoups, nbCouleurs)); // tant que le code est pas compatible
        return true; // alors , il est compat donc true
     }
@@ -478,8 +473,7 @@ public class MasterMindBase {
                 codes[nbEssais - 1] = copieTab(ordiPropal);
             }
             else {
-                if (passeCodeSuivantLexicoCompat(ordiPropal, codes, rep, nbEssais, tabCouleurs.length)) {
-                    passeCodeSuivantLexicoCompat(ordiPropal, codes, rep, nbEssais, tabCouleurs.length);
+                if (passeCodeSuivantLexicoCompat(ordiPropal, codes, rep, nbEssais - 1, tabCouleurs.length)) {
                     codes[nbEssais - 1] = copieTab(ordiPropal);
                 } else {
                     System.out.println("Vous avez essayé de tricher ! ");
@@ -488,13 +482,14 @@ public class MasterMindBase {
             }
             /* réponse humain */
             System.out.println(entiersVersMot(ordiPropal, tabCouleurs)); //affichage
-            rep[nbEssais - 1] = copieTab(reponseHumain(lgCode)); // peut etre faire en deux fois si probleme d'assignement;
+            humainBMP = copieTab(reponseHumain(lgCode)); // peut etre faire en deux fois si probleme d'assignement;
+            rep[nbEssais - 1] = copieTab(humainBMP);
             if (nbEssais == nbEssaisMax - 1) {
                 System.out.println("Attention! Il ne vous reste plus qu'un seul essai!");
             }
             /* Si la partie est gagnée par l'ordinateur */
             if (humainBMP[0] == 4) {
-                System.out.println("Bien joué à l'ordinateur, il a remporté la partie!");
+                System.out.println("l'ordinateur a trouvé le code en "+ nbEssais + " coups.");
                 return nbEssais;
             }
             nbEssais++;
