@@ -180,7 +180,8 @@ public class MasterMindBase {
     public static int[] propositionCodeHumain(int nbCoups, int lgCode, char[] tabCouleurs){
         String codeEssai;
         do {
-            System.out.println("Veuillez saisir votre tentative numéro" + nbCoups + 1 + " :");
+            System.out.println("Veuillez saisir votre tentative numéro" + (nbCoups + 1) + " :");
+            System.out.println(listElem(tabCouleurs));
             codeEssai = Ut.saisirChaine(); // on demande à l'utilisateur de saisir un code ( chaine de caractères)
         }while( !codeCorrect(codeEssai, lgCode, tabCouleurs)); // il recommence jusqu'à ce que le format respecte les règles de codeCorrect
 
@@ -279,22 +280,23 @@ public class MasterMindBase {
             - sinon le nombre de codes proposés par le joueur humain          
     */
     public static int mancheHumain(int lgCode, char[] tabCouleurs, int numManche, int nbEssaisMax){
+        System.out.println("Manche numéro " + numManche);
         /* Initialisation variables */
-        int nbessais = 1;
+        int nbessais = 0;
         int looser = 0;                                                    // Score final si le joueur ne gagne pas
         int[] machineCodeur = codeAleat(lgCode,tabCouleurs.length);
 
-        while(nbessais <= nbEssaisMax) {
+        while(nbessais < nbEssaisMax) {
 
-            System.out.println("Vous êtes au tour numéro" + nbessais);
+            System.out.println("Vous êtes au tour numéro " + (nbessais + 1));
 
             /*Le joueur propose un code*/
-            int[] humainProposition = propositionCodeHumain(numManche, lgCode, tabCouleurs);
+            int[] humainProposition = propositionCodeHumain(nbessais, lgCode, tabCouleurs);
 
             /*  On vérifie si le code proposé est égal au code de l'ordinateur */
             if (sontEgaux(humainProposition, machineCodeur)) {
-                System.out.println("Bien joué ! Vous avez gagnés en " + nbessais);
-                return numManche;
+                System.out.println("Bien joué ! Vous avez gagnés en " + (nbessais + 1) + " coups!");
+                return nbessais + 1;
             }
 
             /* placement c'est un tableau avec i[0] pions biens placés / i[1] pions mal placés */
@@ -470,11 +472,11 @@ public class MasterMindBase {
         int[] humainBMP = initTab(2, 0);
 
         while (nbEssais <= nbEssaisMax) {
-            System.out.println("Il vous reste " + nbEssais + "coups à jouer");
+            System.out.println("Coup numéro "+ nbEssais + " de l'ordinateur ");
+            /* si premier essai de l'ordi*/
             if (nbEssais == 1) {
                 codes[nbEssais - 1] = copieTab(ordiPropal);
             }
-            /* check si le joueur triche */
             else {
                 if (passeCodeSuivantLexicoCompat(ordiPropal, codes, rep, nbEssais, tabCouleurs.length)) {
                     passeCodeSuivantLexicoCompat(ordiPropal, codes, rep, nbEssais, tabCouleurs.length);
@@ -484,16 +486,12 @@ public class MasterMindBase {
                     return 0;
                 }
             }
-
             /* réponse humain */
             System.out.println(entiersVersMot(ordiPropal, tabCouleurs)); //affichage
-            humainBMP = copieTab(reponseHumain(lgCode)); // peut etre faire en deux fois si probleme d'assignement
-            rep[nbEssais - 1] = humainBMP;
-
+            rep[nbEssais - 1] = copieTab(reponseHumain(lgCode)); // peut etre faire en deux fois si probleme d'assignement;
             if (nbEssais == nbEssaisMax - 1) {
                 System.out.println("Attention! Il ne vous reste plus qu'un seul essai!");
             }
-
             /* Si la partie est gagnée par l'ordinateur */
             if (humainBMP[0] == 4) {
                 System.out.println("Bien joué à l'ordinateur, il a remporté la partie!");
@@ -555,20 +553,21 @@ public class MasterMindBase {
     */
     public static char[] saisirCouleurs(){
         /* Variables */
+        System.out.println("Veuillez saisir le nombre de couleurs que vous voulez utilisez");
         int nbCouleurs = saisirEntierPositif();
         char[] tabCouleurs = new char [nbCouleurs];
-        String coul;
+        char coul;
 
-        System.out.print("Veuillez saisir le nombre de couleurs que vous voulez utilisez");
-        for(int i = 0; i<tabCouleurs.length ; i++){
-            System.out.print("Veuillez saisir une couleur");
+        for(int i = 0; i < tabCouleurs.length; i++){
+            System.out.println("Veuillez saisir une couleur pour l'indice "+ i + " du tableau.");
             do {
-                coul = Ut.saisirChaine();
-                if (estPresent(tabCouleurs,coul.charAt(0))){
+                coul = Ut.saisirChaine().charAt(0);
+                System.out.println(coul);
+                if (estPresent(tabCouleurs,coul)){
                     System.out.println("Faites attention, vous avez deja utilisé cette initiale de couleurs ");
                 }
-            } while (estPresent(tabCouleurs,tabCouleurs[i]));
-            tabCouleurs[i] = coul.charAt(0);
+            } while (estPresent(tabCouleurs,coul));
+            tabCouleurs[i] = coul;
         }
         return tabCouleurs;
     }
