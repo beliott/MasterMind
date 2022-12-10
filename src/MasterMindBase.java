@@ -40,11 +40,11 @@ public class MasterMindBase {
 	résultat : la liste des éléments de t entre parenthèses et séparés par des virgules
     */
     public static String listElem(char[] t){
-        String elts = "( ";
+        String elts = "(";
         for(int i = 0; i < t.length; i++){
             elts = elts + t[i];
             if(i != t.length - 1){ // si on est pas sur denier element, on ajoute une virgule pr celui d'apres
-                elts = elts + ", ";
+                elts = elts + ",";
             }
         }
         elts = elts + ")";
@@ -211,11 +211,11 @@ public class MasterMindBase {
 	Par exemple, si cod = (1,0,2,0) et nbCouleurs = 6 la fonction retourne (2,1,1,0,0,0)
     */
     public static int[] tabFrequence(int[] cod, int nbCouleurs){
-        int compteur = 0;     // Permet de compter le nombre d'elements communs
+        int compteur;     // Permet de compter le nombre d'elements communs
         int[] tabR = new int [nbCouleurs];
-        for (int i = 0 ; i<cod.length ; i ++){
+        for (int i = 0 ; i < tabR.length ; i ++){
             compteur=0;
-            for(int j = 0; j<cod.length ; j++){
+            for(int j = 0; j < cod.length ; j++){
                 if( i == cod[j]) {
                     compteur++;
                 }
@@ -260,8 +260,7 @@ public class MasterMindBase {
     */
     public static int[] nbBienMalPlaces(int[] cod1,int[] cod2, int nbCouleurs){
         // faire  k += 1 quand indice j = i et return ( k, nbCommuns-k)
-        int[] nbBMP = {nbBienPlaces(cod1,cod2), nbCommuns(cod1, cod2,nbCouleurs) - nbBienPlaces(cod1, cod2)};
-        return nbBMP;
+        return new int[] {nbBienPlaces(cod1,cod2), nbCommuns(cod1, cod2,nbCouleurs) - nbBienPlaces(cod1, cod2)};
     }
 
 
@@ -293,7 +292,7 @@ public class MasterMindBase {
             int[] humainProposition = propositionCodeHumain(numManche, lgCode, tabCouleurs);
 
             /*  On vérifie si le code proposé est égal au code de l'ordinateur */
-            if (sontEgaux(humainProposition, machineCodeur) == true) {
+            if (sontEgaux(humainProposition, machineCodeur)) {
                 System.out.println("Bien joué ! Vous avez gagnés en " + nbessais);
                 return numManche;
             }
@@ -363,13 +362,16 @@ public class MasterMindBase {
 	résultat : les réponses du joueur humain dans un tableau à 2 entiers
     */
     public static int[] reponseHumain(int lgCode){
-        int repHumain[] = new int[2];
-        String phrase [] = {"Veuillez saisir le nombre de pions bien placés","Veuillez saisir le nombre de pions mal placés"};
-        for(int i = 0 ; i<3;i++){
-            System.out.println(phrase[i]);
-            repHumain [i] = Ut.saisirEntier();
-            repCorrecte(repHumain,lgCode);
-        }
+        int[] repHumain = new int[2];
+        String[] phrase = {"Veuillez saisir le nombre de pions bien placés","Veuillez saisir le nombre de pions mal placés"};
+        do{
+            for(int i = 0 ; i < 2;i++) {
+                System.out.println(phrase[i]);
+                repHumain[i] = Ut.saisirEntier();
+            }
+        }while(!repCorrecte(repHumain,lgCode));
+
+
         return repHumain;
     }
 
@@ -411,7 +413,7 @@ public class MasterMindBase {
        int[] nbBMP;
        for(int i = 0; i < nbCoups; i++){
            nbBMP = nbBienMalPlaces(cod1, cod[i], nbCouleurs);
-           if(nbBMP[0] != rep[i][0] || nbBMP[1] == rep[i][1] ){
+           if(nbBMP[0] != rep[i][0] || nbBMP[1] != rep[i][1] ){
                return false;
            }
        }
@@ -432,10 +434,14 @@ public class MasterMindBase {
    */
    public static boolean passeCodeSuivantLexicoCompat(int [] cod1, int [][] cod,int [][] rep, int nbCoups, int  nbCouleurs){
        do{
-           passeCodeSuivantLexico(cod1, nbCouleurs); // on incrémente le code
-           if( sontEgaux(cod1, initTab(cod1.length, 0))){ // si  code == que des 0
+           if(!passeCodeSuivantLexico(cod1, nbCouleurs)){ // si impossible et qu'on dépasse
+               passeCodeSuivantLexico(cod1, nbCouleurs); // cod1 devient tableau plein de 0
                return false;
            }
+           else{
+               passeCodeSuivantLexico(cod1, nbCouleurs); // on incrémente le code
+           }
+
        }while (!estCompat(cod1, cod, rep, nbCoups, nbCouleurs)); // tant que le code est pas compatible
        return true; // alors , il est compat donc true
     }
