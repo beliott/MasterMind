@@ -1,5 +1,3 @@
-import java.awt.*;
-import java.util.*;
 import java.lang.*;
 
 public class MasterMindBase {
@@ -488,7 +486,7 @@ public class MasterMindBase {
                 System.out.println("Attention! Il ne vous reste plus qu'un seul essai!");
             }
             /* Si la partie est gagnée par l'ordinateur */
-            if (humainBMP[0] == 4) {
+            if (humainBMP[0] == lgCode) {
                 System.out.println("l'ordinateur a trouvé le code en "+ nbEssais + " coups.");
                 return nbEssais;
             }
@@ -616,12 +614,12 @@ public class MasterMindBase {
 
         /*Lancement de la partie*/
         for (int numManche = 1; numManche < nbManches; numManche+=2){
-            scoreJoueur += mancheHumain(lgcode,tabCouleurs,numManche,nbEssaisMax);
-            scoreOrdi += mancheOrdinateur(lgcode,tabCouleurs,numManche+1,nbEssaisMax);
+            scoreOrdi += mancheHumain(lgcode,tabCouleurs,numManche,nbEssaisMax);
+            scoreJoueur += mancheOrdinateur(lgcode,tabCouleurs,numManche+1,nbEssaisMax);
         }
 
         /* Calcul de qui à gagné */
-        if(scoreOrdi < scoreJoueur){
+        if(scoreOrdi > scoreJoueur){
             System.out.println("L'ordinateur a gagné la partie");
         }
         else if (scoreJoueur == scoreOrdi){
